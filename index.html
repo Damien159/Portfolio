@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Damien Blaumüller — Junior Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=Geist+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:        #0d0d0f;
+      --surface:   #141417;
+      --surface2:  #1a1a1f;
+      --border:    rgba(255,255,255,.07);
+      --border2:   rgba(255,255,255,.12);
+      --ink:       #f0ede8;
+      --muted:     #7a7880;
+      --soft:      #a09daa;
+      --accent:    #c8f250;  
+      --accent-dim:#8fb81a;
+      --radius:    12px;
+      --nav-h:     60px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 3.5rem);
+      background: rgba(13,13,15,.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Geist Mono', monospace;
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: .01em;
+    }
+    .nav-logo .dot { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: .85rem;
+      font-weight: 400;
+      transition: color .2s;
+      letter-spacing: .02em;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      font-family: 'Geist Mono', monospace;
+      font-size: .75rem;
+      font-weight: 500;
+      padding: .45rem 1.1rem;
+      border-radius: 6px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+      transition: background .2s, color .2s;
+      letter-spacing: .04em;
+    }
+    .nav-cta:hover { background: var(--accent); color: var(--bg); }
+    .burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .burger span { display: block; width: 22px; height: 1.5px; background: var(--ink); border-radius: 2px; transition: .3s; }
+
+    /* ── home ── */
+    #home {
+      min-height: 100svh;
+      display: flex; align-items: center;
+      padding: calc(var(--nav-h) + 5rem) clamp(1.5rem, 5vw, 3.5rem) 6rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .home-inner { max-width: 700px; }
+
+    .home-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: 'Geist Mono', monospace;
+      font-size: .72rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      animation: fadeUp .5s .1s ease forwards;
+    }
+    .home-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-optical-sizing: auto;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      line-height: 1.03;
+      letter-spacing: -.03em;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp .6s .2s ease forwards;
+    }
+    h1 em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--soft);
+    }
+
+    .home-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      line-height: 1.75;
+      opacity: 0;
+      animation: fadeUp .6s .3s ease forwards;
+    }
+
+    .home-actions {
+      display: flex; flex-wrap: wrap; gap: .75rem;
+      opacity: 0;
+      animation: fadeUp .6s .4s ease forwards;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .7rem 1.6rem;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: .875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: transform .18s, box-shadow .18s, background .18s, color .18s, border-color .18s;
+      cursor: pointer;
+      letter-spacing: .01em;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 600;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,242,80,.25); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--soft);
+      border: 1px solid var(--border2);
+    }
+    .btn-ghost:hover { border-color: var(--soft); color: var(--ink); transform: translateY(-2px); }
+
+    .home-scroll {
+      position: absolute;
+      bottom: 3rem; left: clamp(1.5rem, 5vw, 3.5rem);
+      font-family: 'Geist Mono', monospace;
+      font-size: .65rem;
+      color: var(--muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: .75rem;
+      opacity: 0;
+      animation: fadeUp .6s .6s ease forwards;
+    }
+    .home-scroll::after {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--border2);
+    }
+
+    /* ── SECTION SHELL ── */
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 5rem clamp(1.5rem, 5vw, 3.5rem);
+    }
+    .wrap + .wrap { padding-top: 0; }
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      font-family: 'Geist Mono', monospace;
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+
+    h2 {
+      font-family: 'Fraunces', serif;
+      font-optical-sizing: auto;
+      font-size: clamp(1.9rem, 4vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1.15;
+      margin-bottom: 2.5rem;
+    }
+    h2 em { font-style: italic; font-weight: 300; color: var(--soft); }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      font-size: .975rem;
+    }
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .about-card-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .9rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .84rem;
+    }
+    .about-card-row:last-child { border-bottom: none; }
+    .about-card-row .key { color: var(--muted); font-weight: 400; }
+    .about-card-row .val { font-weight: 500; color: var(--soft); text-align: right; }
+    .status-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+      margin-right: .45rem;
+    }
+    .about-card-row .val.available { color: var(--accent); font-weight: 500; }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .skill-item {
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .65rem;
+      padding: 1.75rem 1rem;
+      transition: background .2s;
+      cursor: default;
+    }
+    .skill-item:hover { background: var(--surface2); }
+    .skill-item:hover .skill-icon { transform: translateY(-3px); }
+    .skill-icon {
+      width: 36px; height: 36px;
+      transition: transform .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .skill-icon svg { width: 100%; height: 100%; }
+    .skill-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: .68rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: .04em;
+      text-align: center;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+
+    .project-item {
+      background: var(--surface);
+      padding: 1.75rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: start;
+      transition: background .2s;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+    }
+    .project-item:hover { background: var(--surface2); }
+    .project-item.featured {
+      grid-template-columns: 1fr;
+      padding: 2.25rem 2rem;
+    }
+    .project-item.featured .project-header { margin-bottom: .75rem; }
+
+    .project-header {
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: .5rem;
+    }
+    .project-number {
+      font-family: 'Geist Mono', monospace;
+      font-size: .65rem;
+      color: var(--muted);
+      width: 20px;
+      flex-shrink: 0;
+    }
+    .project-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+    .project-featured-badge {
+      font-family: 'Geist Mono', monospace;
+      font-size: .6rem;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      background: rgba(200,242,80,.1);
+      color: var(--accent);
+      border: 1px solid rgba(200,242,80,.2);
+      border-radius: 4px;
+      padding: .2rem .5rem;
+    }
+    .project-desc {
+      color: var(--muted);
+      font-size: .875rem;
+      line-height: 1.7;
+      font-weight: 300;
+      max-width: 560px;
+      margin-bottom: 1rem;
+    }
+    .project-tags {
+      display: flex; flex-wrap: wrap; gap: .4rem;
+    }
+    .tag {
+      font-family: 'Geist Mono', monospace;
+      font-size: .65rem;
+      font-weight: 400;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      padding: .2rem .55rem;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+    .project-arrow {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: border-color .2s, color .2s, transform .2s;
+      margin-top: .15rem;
+    }
+    .project-item:hover .project-arrow { border-color: var(--accent); color: var(--accent); transform: translate(2px,-2px); }
+
+    /* ── CONTACT ── */
+    .contact-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius)*1.5);
+      padding: clamp(2.5rem, 6vw, 4rem);
+      text-align: center;
+    }
+    .contact-box h2 { margin-bottom: .75rem; }
+    .contact-sub {
+      color: var(--muted);
+      font-size: .95rem;
+      font-weight: 300;
+      max-width: 400px;
+      margin: 0 auto 2.25rem;
+      line-height: 1.75;
+    }
+    .contact-links {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem;
+    }
+    .contact-link {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .6rem 1.4rem;
+      border-radius: 8px;
+      border: 1px solid var(--border2);
+      text-decoration: none;
+      font-size: .85rem; font-weight: 500; color: var(--soft);
+      transition: border-color .2s, color .2s, background .2s, transform .2s;
+      font-family: 'Geist Mono', monospace;
+      letter-spacing: .02em;
+    }
+    .contact-link svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .contact-link:hover { border-color: var(--ink); color: var(--ink); transform: translateY(-2px); }
+    .contact-link.primary { border-color: rgba(200,242,80,.3); color: var(--accent); background: rgba(200,242,80,.05); }
+    .contact-link.primary:hover { border-color: var(--accent); background: rgba(200,242,80,.1); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--border);
+      font-family: 'Geist Mono', monospace;
+      font-size: .68rem;
+      letter-spacing: .06em;
+      color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--soft); }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: -1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: .4;
+      pointer-events: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: fixed; top: var(--nav-h); left: 0; right: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: 1.5rem 2rem 2rem;
+        gap: 1.25rem;
+      }
+      .nav-links.open a { font-size: .95rem; color: var(--soft); }
+      .burger { display: flex; }
+
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .skills-grid { grid-template-columns: repeat(5, 1fr); }
+      .project-item { grid-template-columns: 1fr; }
+      .project-arrow { display: none; }
+      h1 { letter-spacing: -.03em; }
+      .home-scroll { display: none; }
+    }
+    @media (max-width: 480px) {
+      .skills-grid { grid-template-columns: repeat(5, 1fr); gap: 0; }
+      .skill-item { padding: 1.25rem .5rem; }
+      .skill-icon { width: 28px; height: 28px; }
+      .skill-label { font-size: .6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#home">db<span class="dot">.</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">Über mich</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projekte</a></li>
+      <li><a href="#contact">Kontakt</a></li>
+    </ul>
+    <a href="mailto:damienblaumuller@gmail.com" class="nav-cta">Kontakt</a>
+    <button class="burger" id="burger" aria-label="Menü öffnen">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+
+  <!-- home -->
+  <section id="home">
+    <div class="home-inner">
+      <div class="home-tag">Offen für neue Möglichkeiten</div>
+
+      <h1>Damien<br><em>Blaumüller</em></h1>
+
+      <p class="home-sub">
+        Junior Full-Stack Developer aus Wien. Ich baue Web-Applikationen
+        mit modernen Technologien und bin motiviert, in einem Team zu
+        wachsen und echte Probleme zu lösen.
+      </p>
+
+      <div class="home-actions">
+        <a href="#projects" class="btn btn-primary">Projekte ansehen</a>
+        <a href="#contact" class="btn btn-ghost">Kontakt aufnehmen</a>
+      </div>
+    </div>
+    <div class="home-scroll">Scroll</div>
+  </section>
+
+
+  <hr class="section-divider">
+
+  <!-- ABOUT -->
+  <section id="about" class="wrap">
+    <div class="eyebrow reveal">Über mich</div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <h2>Motiviert,<br><em>lernbereit</em> und praxisorientiert.</h2>
+        <p>
+          Ich bin 20 Jahre alt und habe mich in den letzten Jahren intensiv mit
+          Webentwicklung und Softwarearchitektur beschäftigt. Mein Fokus liegt
+          auf dem gesamten Stack — von sauberem Frontend mit Vue.js und Tailwind
+          bis hin zu Backend-Logik mit C#, Laravel und SQL.
+        </p>
+        <p>
+          Ich lerne am schnellsten durch echte Projekte und schätze klares
+          Feedback. Mir ist wichtig, in einem Team zu arbeiten, das hohe
+          Qualitätsstandards hat und Wert auf sauberen Code legt.
+        </p>
+      </div>
+
+      <div class="about-card reveal" style="transition-delay:.1s">
+        <div class="about-card-row">
+          <span class="key">Standort</span>
+          <span class="val">Wien, Österreich</span>
+        </div>
+        <div class="about-card-row">
+          <span class="key">Fokus</span>
+          <span class="val">Full-Stack Development</span>
+        </div>
+        <div class="about-card-row">
+          <span class="key">Sprachen</span>
+          <span class="val">DE · EN · HU</span>
+        </div>
+        <div class="about-card-row">
+          <span class="key">Status</span>
+          <span class="val available"><span class="status-dot"></span>Verfügbar</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <hr class="section-divider">
+
+  <!-- SKILLS -->
+  <section id="skills" class="wrap">
+    <div class="eyebrow reveal">Technologien</div>
+    <h2 class="reveal">Tech-Stack &amp; <em>Tools</em></h2>
+
+    <div class="skills-grid reveal" style="transition-delay:.1s">
+
+      <!-- Vue.js -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 3.5L8.5 17H2L16 3.5z" fill="#41b883"/>
+            <path d="M16 3.5L23.5 17H30L16 3.5z" fill="#41b883"/>
+            <path d="M16 3.5L8.5 17H11.5L16 9.5L20.5 17H23.5L16 3.5z" fill="#34495e"/>
+            <path d="M8.5 17L16 30.5L23.5 17H20.5L16 24L11.5 17H8.5z" fill="#41b883"/>
+          </svg>
+        </div>
+        <span class="skill-label">Vue.js</span>
+      </div>
+
+      <!-- Tailwind -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 7c-2.667 0-4.333 1.333-5 4 1-1.333 2.167-1.833 3.5-1.5.76.19 1.303.742 1.906 1.354C17.28 11.746 18.355 13 20.5 13c2.667 0 4.333-1.333 5-4-1 1.333-2.167 1.833-3.5 1.5-.76-.19-1.303-.742-1.906-1.354C19.22 8.254 18.145 7 16 7zM11 13c-2.667 0-4.333 1.333-5 4 1-1.333 2.167-1.833 3.5-1.5.76.19 1.303.742 1.906 1.354C12.28 17.746 13.355 19 15.5 19c2.667 0 4.333-1.333 5-4-1 1.333-2.167 1.833-3.5 1.5-.76-.19-1.303-.742-1.906-1.354C14.22 14.254 13.145 13 11 13z" fill="#38bdf8"/>
+          </svg>
+        </div>
+        <span class="skill-label">Tailwind</span>
+      </div>
+
+      <!-- Scrum -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="12" stroke="#f97316" stroke-width="2"/>
+            <path d="M16 8v8l5 3" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="skill-label">Scrum</span>
+      </div>
+
+      <!-- Laravel -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M28.5 8.5c.3.6.5 1.3.5 2.1v9.7c0 1.4-.8 2.8-2 3.5l-8 4.6c-.6.4-1.3.5-2 .5s-1.4-.2-2-.5l-8-4.6C5.8 23.1 5 21.7 5 20.3v-9.7c0-.8.2-1.5.5-2.1L13 3c1.2-.7 2.8-.7 4 0l8 4.6 1.5 1z" stroke="#ff2d20" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M5.5 9.5L16 16l10.5-6.5M16 16v12" stroke="#ff2d20" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="skill-label">Laravel</span>
+      </div>
+
+      <!-- PHP -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="16" cy="16" rx="13" ry="8" stroke="#8892bf" stroke-width="1.8"/>
+            <path d="M10 13l1.5 6M11.5 13h3c1.5 0 2.5 1 2.5 2s-1 2-2.5 2h-2" stroke="#8892bf" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19 13l1.5 6M20.5 13h3c1.5 0 2.5 1 2.5 2s-1 2-2.5 2h-2" stroke="#8892bf" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="skill-label">PHP</span>
+      </div>
+
+      <!-- JavaScript -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="24" height="24" rx="2" fill="#f7df1e"/>
+            <path d="M11 21c0 1.5 1 2.5 2.5 2.5s2.5-1 2.5-2.5V15" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+            <path d="M19 15v5.5c.5 1 1.5 1.5 3 1" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="skill-label">JavaScript</span>
+      </div>
+
+      <!-- C# -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 4L4 11v10l12 7 12-7V11L16 4z" stroke="#9b59b6" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M12 16a4 4 0 1 0 8 0 4 4 0 0 0-8 0z" stroke="#9b59b6" stroke-width="1.8"/>
+            <path d="M21 13.5v5M23.5 16h-5" stroke="#9b59b6" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="skill-label">C#</span>
+      </div>
+
+      <!-- Blazor -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 4h16a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z" stroke="#512bd4" stroke-width="1.8"/>
+            <path d="M10 12h8a3 3 0 0 1 0 6h-5M10 18l3 4" stroke="#512bd4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="skill-label">Blazor</span>
+      </div>
+
+      <!-- SQL -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="16" cy="10" rx="10" ry="4" stroke="#00758f" stroke-width="1.8"/>
+            <path d="M6 10v12c0 2.2 4.5 4 10 4s10-1.8 10-4V10" stroke="#00758f" stroke-width="1.8"/>
+            <path d="M6 16c0 2.2 4.5 4 10 4s10-1.8 10-4" stroke="#00758f" stroke-width="1.8"/>
+          </svg>
+        </div>
+        <span class="skill-label">SQL</span>
+      </div>
+
+      <!-- Git -->
+      <div class="skill-item">
+        <div class="skill-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M29 15l-12-12a2 2 0 0 0-2.83 0l-2.83 2.83 3.59 3.59a2.38 2.38 0 0 1 3.01 3.02l3.46 3.46a2.38 2.38 0 1 1-1.42 1.42L16.6 14.44a2.38 2.38 0 0 1-3.2-2.25 2.38 2.38 0 0 1 .6-1.59L10.44 7.05 3 14.49a2 2 0 0 0 0 2.83l12 12a2 2 0 0 0 2.83 0l11.17-11.17A2 2 0 0 0 29 15z" fill="#f05032"/>
+          </svg>
+        </div>
+        <span class="skill-label">Git</span>
+      </div>
+
+    </div>
+  </section>
+
+
+  <hr class="section-divider">
+
+  <!-- PROJECTS -->
+  <section id="projects" class="wrap">
+    <div class="eyebrow reveal">Projekte</div>
+    <h2 class="reveal">Was ich <em>gebaut</em> habe.</h2>
+
+    <div class="projects-list reveal" style="transition-delay:.1s">
+
+      <a href="https://github.com/Damien159" target="_blank" rel="noopener" class="project-item featured">
+        <div>
+          <div class="project-header">
+            <span class="project-number">01</span>
+            <span class="project-name">Mini Twitter Clone</span>
+            <span class="project-featured-badge">Featured</span>
+          </div>
+          <p class="project-desc">
+          Mini-Twitter-Clone mit Laravel, Livewire, Tailwind CSS und HeidiSQL zur Erstellung und Verwaltung von Beiträgen, Benutzerinteraktionen und dynamischen Echtzeit-Updates — eines meiner umfangreichsten Full-Stack-Projekte.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Php</span>
+            <span class="tag">Tailwind</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Larvel</span>
+            <span class="tag">Livewire</span>
+            <span class="tag">HeidiDB</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="https://github.com/Damien159" target="_blank" rel="noopener" class="project-item">
+        <div>
+          <div class="project-header">
+            <span class="project-number">02</span>
+            <span class="project-name">Arbeitszeiterfassung</span>
+          </div>
+          <p class="project-desc">
+            Arbeitszeiterfassungs-App mit Laravel, PHP und HeidiSQL zur Verwaltung von Arbeitszeiten sowie zur Erfassung von Urlaub und Zeitausgleich.
+          <div class="project-tags">
+            <span class="tag">Php</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Laravel</span>
+            <span class="tag">Tailwind</span>
+            <span class="tag">HeidiDB</span>
+            <span class="tag">localStorage</span>
+          </div>
+        </div>
+        <div class="project-arrow">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 13L13 3M13 3H7M13 3v6"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="https://github.com/Damien159" target="_blank" rel="noopener" class="project-item">
+        <div>
+          <div class="project-header">
+            <span class="project-number">03</span>
+            <span class="project-name">Ticketsystem</span>
+          </div>
+          <p class="project-desc">
+            Ticketsystem mit Blazor, C# und SQL zur Verwaltung von Tickets mit Login-
+            und Registrierungssystem, Kategorie-Filterung sowie Sprint-Verwaltung für
+            strukturierte Arbeitsabläufe und Aufgabenplanung.
+            </p>
+
+            <div class="project-tags">
+                <span class="tag">Blazor</span>
+                <span class="tag">C#</span>
+                <span class="tag">SQL</span>
+                <span class="tag">Authentication</span>
+                <span class="tag">Sprint Planning</span>
+            </div>
+        </div>
+        <div class="project-arrow">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 13L13 3M13 3H7M13 3v6"/>
+          </svg>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+
+  <hr class="section-divider">
+
+  <!-- CONTACT -->
+  <section id="contact" class="wrap">
+    <div class="contact-box reveal">
+      <div class="eyebrow" style="margin-bottom:.75rem">Kontakt</div>
+      <h2>Lass uns <em>reden.</em></h2>
+      <p class="contact-sub">
+        Offen für Einstiegspositionen und spannende Projekte.
+        Ich antworte innerhalb eines Werktages.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:damienblaumuller@gmail.com" class="contact-link primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m2 7 10 7 10-7"/>
+          </svg>
+          damienblaumuller@gmail.com
+        </a>
+        <a href="https://github.com/Damien159" target="_blank" rel="noopener" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/damien-blaumüller-07b9423bb/" target="_blank" rel="noopener" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <footer>
+    <p>Damien Blaumüller &nbsp;·&nbsp; Wien &nbsp;·&nbsp;
+      <a href="mailto:damienblaumuller@gmail.com">damienblaumuller@gmail.com</a>
+    </p>
+  </footer>
+
+
+  <script>
+    // Burger
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('navLinks');
+    burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+    // Scroll reveal
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+
+</body>
+</html>
